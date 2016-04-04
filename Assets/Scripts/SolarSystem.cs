@@ -1,16 +1,21 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class SolarSystem : MonoBehaviour {
 	[SerializeField]
-	private int[] levelPopMin;
+	public int[] levelPopMin;
 	[SerializeField]
-	private int[] levelPopMax;
+	public int[] levelPopMax;
+	[SerializeField]
+	public float baseOrbitSize = 10;
+	[SerializeField]
+	public float orbitSizeScale = 5;
+	[SerializeField]
+	public float massScale = 10;
+
 
 	[SerializeField]
 	private GameObject satellitePrefab;
 
-	// Use this for initialization
 	void Start () {
 		createSystem(gameObject, 0);
 	}
@@ -21,11 +26,14 @@ public class SolarSystem : MonoBehaviour {
 		for(int i = 0; i < bodyCount; ++i) {
 			GameObject satellite = Instantiate<GameObject>(satellitePrefab);
 			satellite.transform.parent = parent.transform;
+			Satellite satCom = satellite.GetComponent<Satellite>();
+			satCom.mass = Mathf.Pow(massScale, -depth) * Random.Range(0.5f, 2.0f);
+			satCom.initialPhase = Random.value * 2 * Mathf.PI;
+			satCom.orbitLength = baseOrbitSize * Mathf.Pow(orbitSizeScale, -depth) * Random.Range(0.2f, 1.0f);
 			createSystem(satellite, depth + 1);
 		}
 	}
 
-	// Update is called once per frame
 	void Update () {
 	
 	}
